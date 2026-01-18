@@ -1,0 +1,104 @@
+import { useMemo, useState } from "react";
+import ProductCard from "../components/ProductCard";
+import { useLanguage } from "../components/LanguageProvider";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
+const CategoriesPage = ({ products = [] }) => {
+  const { t } = useLanguage();
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("");
+  const [sort, setSort] = useState("price_asc");
+
+  const categories = useMemo(() => {
+    return Array.from(
+      new Set(products.map((p) => p.category).filter(Boolean))
+    );
+  }, [products]);
+
+  const filtered = useMemo(() => {
+    let list = products;
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter((p) => (p.name_fr || p.name || "").toLowerCase().includes(q));
+    }
+    if (category) {
+      list = list.filter((p) => p.category === category);
+    }
+    if (sort === "price_asc") {
+      list = [...list].sort((a, b) => (a.price_mad || 0) - (b.price_mad || 0));
+    } else if (sort === "price_desc") {
+      list = [...list].sort((a, b) => (b.price_mad || 0) - (a.price_mad || 0));
+    } else if (sort === "name") {
+      list = [...list].sort((a, b) => (a.name_fr || "").localeCompare(b.name_fr || ""));
+    }
+    return list;
+  }, [query, category, sort, products]);
+
+  const grouped = useMemo(() => {
+    return filtered.reduce((acc, item) => {
+      const key = item.category || "Catalogue DXN";
+      acc[key] = acc[key] || [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+  }, [filtered]);
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-10">
+      <h1 className="text-2xl font-semibold text-gray-800">{t("catalog.title")}</h1>
+      <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t("search.placeholder")}
+          className="w-full rounded-lg border px-4 py-2"
+        />
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full rounded-lg border px-4 py-2"
+        >
+          <option value="">{t("catalog.filter")}</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="w-full rounded-lg border px-4 py-2"
+        >
+          <option value="price_asc">{t("catalog.sort_price_asc")}</option>
+          <option value="price_desc">{t("catalog.sort_price_desc")}</option>
+          <option value="name">{t("catalog.sort_name")}</option>
+        </select>
+      </div>
+
+      {Object.entries(grouped).map(([cat, items]) => (
+        <div key={cat} className="mt-8">
+          <h2 className="text-xl font-semibold text-gray-800">{cat}</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+            {items.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CategoriesPage;
+
+export async function getServerSideProps() {
+  try {
+    const res = await fetch(`${API_URL}/api/products`);
+    const data = await res.json();
+    return { props: { products: Array.isArray(data) ? data : [] } };
+  } catch (err) {
+    return { props: { products: [] } };
+  }
+}

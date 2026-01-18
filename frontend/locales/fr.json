@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "categories": "Catégories",
+    "cart": "Panier",
+    "volunteer": "Volontariat",
+    "testimonials": "Témoignages",
+    "about": "À propos",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "DXN – La santé naturelle au cœur de votre vie",
+    "subtitle": "Compléments, boissons santé, soins et cosmétiques DXN livrés partout au Maroc.",
+    "cta": "Voir les produits"
+  },
+  "about": {
+    "title": "À propos de DXN",
+    "content": "DXN est une entreprise malaisienne mondiale fondée en 1993, spécialisée dans les produits de santé naturelle à base de Ganoderma, Spiruline et ingrédients naturels."
+  },
+  "featured": {
+    "title": "Produits vedettes",
+    "cta": "Commander via WhatsApp"
+  },
+  "search": {
+    "placeholder": "Rechercher un produit..."
+  },
+  "catalog": {
+    "title": "Produits par catégorie",
+    "filter": "Toutes les catégories",
+    "sort": "Trier par",
+    "sort_price_asc": "Prix (croissant)",
+    "sort_price_desc": "Prix (décroissant)",
+    "sort_name": "Nom (A-Z)"
+  },
+  "testimonials": {
+    "title": "Ce que disent nos clients",
+    "items": [
+      "Les produits DXN ont changé mon énergie quotidienne. — Ahmed, Casablanca",
+      "Produits naturels et service très professionnel. — Fatima, Rabat"
+    ],
+    "formTitle": "Partager un témoignage",
+    "name": "Nom",
+    "city": "Ville",
+    "message": "Votre témoignage",
+    "send": "Envoyer via WhatsApp"
+  },
+  "volunteer": {
+    "title": "Devenez volontaire DXN",
+    "subtitle": "Rejoignez une communauté engagée pour la santé naturelle.",
+    "cta": "Devenir volontaire",
+    "pageTitle": "Programme volontaire DXN",
+    "pageIntro": "Le programme volontaire DXN permet à toute personne motivée de participer à la sensibilisation à la santé naturelle, au soutien communautaire et au partage des valeurs DXN.",
+    "form": {
+      "name": "Nom",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "motivation": "Motivation",
+      "submit": "Envoyer"
+    }
+  },
+  "catalogue": {
+    "title": "Catalogue officiel DXN",
+    "cta": "Télécharger le catalogue PDF"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide.",
+    "name": "Nom",
+    "city": "Ville",
+    "address": "Adresse",
+    "send": "Envoyer la commande sur WhatsApp",
+    "remove": "Supprimer",
+    "total": "Total"
+  },
+  "product": {
+    "add": "Ajouter",
+    "details": "Détails"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Commandes et informations via WhatsApp uniquement."
+  }
+}

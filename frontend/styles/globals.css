@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dxn-green: #1f7a3a;
+  --dxn-gold: #c4a14a;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f9fafb;
+  color: #1f2937;
+}
+
+.dxn-gradient {
+  background: linear-gradient(120deg, rgba(31, 122, 58, 0.08), rgba(196, 161, 74, 0.08));
+}
+
+.rtl {
+  direction: rtl;
+}
+
+@keyframes softFloat {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.03);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.footer-float {
+  animation: softFloat 4s ease-in-out infinite;
+}
+
+@keyframes pillFall {
+  0% {
+    transform: translateY(-120px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(140px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.pill {
+  position: absolute;
+  width: 28px;
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1f7a3a 50%, #c4a14a 50%);
+  opacity: 0;
+  animation: pillFall 6s linear infinite;
+}
+
+.pill-1 { left: 4%; animation-delay: 0s; }
+.pill-2 { left: 12%; animation-delay: 1s; animation-duration: 7s; }
+.pill-3 { left: 20%; animation-delay: 2s; animation-duration: 5.5s; }
+.pill-4 { left: 28%; animation-delay: 0.5s; animation-duration: 6.5s; }
+.pill-5 { left: 36%; animation-delay: 1.5s; animation-duration: 7.5s; }
+.pill-6 { left: 44%; animation-delay: 0.2s; animation-duration: 6.2s; }
+.pill-7 { left: 52%; animation-delay: 2.4s; animation-duration: 7.2s; }
+.pill-8 { left: 60%; animation-delay: 1.1s; animation-duration: 5.8s; }
+.pill-9 { left: 68%; animation-delay: 2.8s; animation-duration: 6.9s; }
+.pill-10 { left: 76%; animation-delay: 0.8s; animation-duration: 7.8s; }
+.pill-11 { left: 84%; animation-delay: 1.9s; animation-duration: 6.1s; }
+.pill-12 { left: 92%; animation-delay: 2.2s; animation-duration: 7.4s; }
