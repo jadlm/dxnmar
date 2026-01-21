@@ -396,104 +396,126 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-dxnGreen to-dxnGold">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-white">
-          <div>
-            <h1 className="text-2xl font-semibold">Dashboard DXN</h1>
-            <p className="text-sm text-white/80">Gestion e-commerce & WhatsApp</p>
+    <div className="min-h-screen bg-slate-100">
+      <div className="mx-auto flex max-w-[1300px] gap-6 px-4 py-6">
+        <aside className="hidden w-64 flex-shrink-0 rounded-2xl bg-slate-900 p-5 text-white lg:block">
+          <div className="flex items-center gap-3">
+            <img
+              src="/images/logo_logo3.png"
+              alt="DXN"
+              className="h-10 w-10 rounded-full bg-white p-1"
+            />
+            <div>
+              <p className="text-sm text-white/70">DXN Admin</p>
+              <p className="text-lg font-semibold">Dashboard</p>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-full bg-white/20 px-4 py-2 text-sm text-white hover:bg-white/30"
-          >
-            Déconnexion
-          </button>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-        {loading && <p className="mb-4 text-sm text-gray-500">Chargement...</p>}
-
-        <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Produits</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGreen">
-              {stats?.total_products ?? products.length}
-            </p>
-          </div>
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Témoignages</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGreen">{testimonials.length}</p>
-          </div>
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Volontaires</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGreen">
-              {stats?.total_volunteers ?? volunteers.length}
-            </p>
-          </div>
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Commandes</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGreen">
-              {stats?.total_orders ?? orders.length}
-            </p>
-          </div>
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Total des ventes</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGold">{stats?.total_sales ?? 0} DH</p>
-          </div>
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <p className="text-xs text-gray-500">Clients</p>
-            <p className="mt-2 text-2xl font-semibold text-dxnGold">
-              {stats?.total_clients ?? clients.length}
-            </p>
-          </div>
-        </div>
-        <div className="mt-6 rounded-xl border bg-white p-4 shadow-sm">
-        <p className="text-xs font-semibold uppercase text-gray-400">Notifications</p>
-        <div className="mt-3 grid gap-3 md:grid-cols-2 text-sm">
-          <div>
-            <p className="font-semibold text-gray-700">Nouvelles commandes</p>
-            {notifications.new_orders.length === 0 ? (
-              <p className="text-gray-500">Aucune</p>
-            ) : (
-              notifications.new_orders.map((o) => (
-                <p key={o.id} className="text-gray-600">
-                  #{o.id} • {o.customer_name} • {o.total_mad} DH
-                </p>
-              ))
-            )}
-          </div>
-          <div>
-            <p className="font-semibold text-gray-700">Nouveaux volontaires</p>
-            {notifications.new_volunteers.length === 0 ? (
-              <p className="text-gray-500">Aucun</p>
-            ) : (
-              notifications.new_volunteers.map((v) => (
-                <p key={v.id} className="text-gray-600">
-                  {v.name} • {v.city}
-                </p>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[230px_1fr]">
-          <aside className="rounded-xl border bg-white p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase text-gray-400">Menu</p>
-          <nav className="mt-4 flex flex-col gap-2 text-sm">
-            <a href="#products" className="rounded-lg px-3 py-2 text-gray-700 hover:bg-dxnGreen/10 hover:text-dxnGreen">Produits</a>
-            <a href="#testimonials" className="rounded-lg px-3 py-2 text-gray-700 hover:bg-dxnGreen/10 hover:text-dxnGreen">Témoignages</a>
-            <a href="#volunteers" className="rounded-lg px-3 py-2 text-gray-700 hover:bg-dxnGreen/10 hover:text-dxnGreen">Volontaires</a>
-            <a href="#orders" className="rounded-lg px-3 py-2 text-gray-700 hover:bg-dxnGreen/10 hover:text-dxnGreen">Commandes</a>
-            <a href="#clients" className="rounded-lg px-3 py-2 text-gray-700 hover:bg-dxnGreen/10 hover:text-dxnGreen">Clients</a>
+          <nav className="mt-6 space-y-2 text-sm">
+            <a href="#products" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
+              Produits
+            </a>
+            <a href="#testimonials" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
+              Témoignages
+            </a>
+            <a href="#volunteers" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
+              Volontaires
+            </a>
+            <a href="#orders" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
+              Commandes
+            </a>
+            <a href="#clients" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
+              Clients
+            </a>
           </nav>
         </aside>
+
+        <div className="flex-1 space-y-6">
+          <div className="rounded-2xl bg-gradient-to-r from-dxnGreen to-dxnGold px-6 py-6 text-white shadow">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h1 className="text-2xl font-semibold">Dashboard DXN</h1>
+                <p className="text-sm text-white/80">Gestion e-commerce & WhatsApp</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-full bg-white/20 px-4 py-2 text-sm text-white hover:bg-white/30"
+              >
+                Déconnexion
+              </button>
+            </div>
+          </div>
+
+          {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          {loading && <p className="mb-4 text-sm text-gray-500">Chargement...</p>}
+
+          <div className="grid gap-4 md:grid-cols-4">
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Produits</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGreen">
+                {stats?.total_products ?? products.length}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Témoignages</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGreen">{testimonials.length}</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Volontaires</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGreen">
+                {stats?.total_volunteers ?? volunteers.length}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Commandes</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGreen">
+                {stats?.total_orders ?? orders.length}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Total des ventes</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGold">{stats?.total_sales ?? 0} DH</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="text-xs text-gray-500">Clients</p>
+              <p className="mt-2 text-2xl font-semibold text-dxnGold">
+                {stats?.total_clients ?? clients.length}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase text-gray-400">Notifications</p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2 text-sm">
+              <div>
+                <p className="font-semibold text-gray-700">Nouvelles commandes</p>
+                {notifications.new_orders.length === 0 ? (
+                  <p className="text-gray-500">Aucune</p>
+                ) : (
+                  notifications.new_orders.map((o) => (
+                    <p key={o.id} className="text-gray-600">
+                      #{o.id} • {o.customer_name} • {o.total_mad} DH
+                    </p>
+                  ))
+                )}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-700">Nouveaux volontaires</p>
+                {notifications.new_volunteers.length === 0 ? (
+                  <p className="text-gray-500">Aucun</p>
+                ) : (
+                  notifications.new_volunteers.map((v) => (
+                    <p key={v.id} className="text-gray-600">
+                      {v.name} • {v.city}
+                    </p>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
 
           <div className="space-y-8">
       <section id="products" className="rounded-xl border bg-white p-5 shadow-sm">
@@ -603,42 +625,62 @@ const AdminPage = () => {
             </option>
           ))}
         </select>
-        <div className="mt-4 space-y-2">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="flex items-center justify-between border-b pb-2 text-sm">
-              <div>
-                <p className="font-semibold">{product.name_fr}</p>
-                <p className="text-gray-500">{product.price_mad} DH</p>
-                <p className="text-xs text-gray-400">
-                  {product.status === "inactive" ? "Inactif" : "Actif"} •{" "}
-                  {product.availability ? "Disponible" : "Indisponible"}
-                </p>
-                {product.image && (
-                  <img
-                    src={product.image}
-                    alt={product.name_fr}
-                    className="mt-2 h-10 w-10 rounded object-cover"
-                  />
-                )}
-              </div>
-              <div className="flex flex-col gap-2">
-                <button
-                  type="button"
-                  onClick={() => setEditingProduct(product)}
-                  className="text-dxnGreen"
-                >
-                  Modifier
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteProduct(product.id)}
-                  className="text-red-500"
-                >
-                  Supprimer
-                </button>
-              </div>
-            </div>
-          ))}
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+              <tr>
+                <th className="px-3 py-2">Produit</th>
+                <th className="px-3 py-2">Prix</th>
+                <th className="px-3 py-2">Statut</th>
+                <th className="px-3 py-2">Image</th>
+                <th className="px-3 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts.map((product) => (
+                <tr key={product.id} className="border-b">
+                  <td className="px-3 py-2">
+                    <p className="font-semibold">{product.name_fr}</p>
+                    <p className="text-xs text-gray-400">{product.category}</p>
+                  </td>
+                  <td className="px-3 py-2 text-gray-600">{product.price_mad} DH</td>
+                  <td className="px-3 py-2 text-xs text-gray-500">
+                    {product.status === "inactive" ? "Inactif" : "Actif"} •{" "}
+                    {product.availability ? "Disponible" : "Indisponible"}
+                  </td>
+                  <td className="px-3 py-2">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name_fr}
+                        className="h-10 w-10 rounded object-cover"
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingProduct(product)}
+                        className="rounded-full border px-3 py-1 text-xs text-dxnGreen"
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="rounded-full border px-3 py-1 text-xs text-red-500"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -951,9 +993,9 @@ const AdminPage = () => {
         </div>
       </section>
           </div>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 
