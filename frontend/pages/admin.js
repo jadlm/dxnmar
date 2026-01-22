@@ -444,7 +444,7 @@ const AdminPage = () => {
               Témoignages
             </a>
             <a href="#volunteers" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
-              Volontaires
+              Devenir un membre
             </a>
             <a href="#orders" className="block rounded-lg px-3 py-2 text-white/80 hover:bg-white/10">
               Commandes
@@ -487,7 +487,7 @@ const AdminPage = () => {
               <p className="mt-2 text-2xl font-semibold text-dxnGreen">{testimonials.length}</p>
             </div>
             <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <p className="text-xs text-gray-500">Volontaires</p>
+            <p className="text-xs text-gray-500">Devenir un membre</p>
               <p className="mt-2 text-2xl font-semibold text-dxnGreen">
                 {stats?.total_volunteers ?? volunteers.length}
               </p>
@@ -529,7 +529,7 @@ const AdminPage = () => {
                 )}
               </div>
               <div>
-                <p className="font-semibold text-gray-700">Nouveaux volontaires</p>
+                <p className="font-semibold text-gray-700">Nouveaux membres</p>
                 {notifications.new_volunteers.length === 0 ? (
                   <p className="text-gray-500">Aucun</p>
                 ) : (
@@ -861,7 +861,8 @@ const AdminPage = () => {
       </section>
 
       <section id="volunteers" className="rounded-xl border bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-800">Volontaires</h2>
+        <h2 className="text-lg font-semibold text-gray-800">Devenir un membre</h2>
+        <p className="mt-1 text-sm text-gray-500">WhatsApp commandes : 212624559497</p>
         <div className="mt-4 space-y-2 text-sm">
           {volunteers.map((item) => (
             <div key={item.id} className="flex items-start justify-between border-b pb-2">
