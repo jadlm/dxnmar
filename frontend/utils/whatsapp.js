@@ -31,6 +31,14 @@ export const buildWhatsAppMessage = ({ items, locale, customer }) => {
 export const buildWhatsAppLink = (phone, message) => {
   const cleaned = String(phone || "").replace(/[^\d]/g, "");
   const encoded = encodeURIComponent(message);
+  if (typeof window !== "undefined") {
+    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      navigator.userAgent || ""
+    );
+    if (!isMobile) {
+      return `https://web.whatsapp.com/send?phone=${cleaned}&text=${encoded}`;
+    }
+  }
   return `https://wa.me/${cleaned}?text=${encoded}`;
 };
 
