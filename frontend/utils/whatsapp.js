@@ -31,6 +31,9 @@ export const buildWhatsAppMessage = ({ items, locale, customer }) => {
 export const buildWhatsAppLink = (phone, message) => {
   const cleaned = String(phone || "").replace(/[^\d]/g, "");
   const encoded = encodeURIComponent(message);
+  if (!cleaned) {
+    return "";
+  }
   if (typeof window !== "undefined") {
     const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
       navigator.userAgent || ""
@@ -38,7 +41,7 @@ export const buildWhatsAppLink = (phone, message) => {
     if (isMobile) {
       return `whatsapp://send?phone=${cleaned}&text=${encoded}`;
     }
-    return `https://web.whatsapp.com/send?phone=${cleaned}&text=${encoded}`;
+    return `https://web.whatsapp.com/send?phone=${cleaned}&text=${encoded}&app_absent=0`;
   }
   return `https://wa.me/${cleaned}?text=${encoded}`;
 };
