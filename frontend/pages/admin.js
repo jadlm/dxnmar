@@ -195,7 +195,9 @@ const AdminPage = () => {
     setError("");
     const payload = {
       ...editingProduct,
-      slug: slugify(editingProduct.name_fr || editingProduct.name_ar),
+      name_fr: editingProduct.name_fr || "",
+      name_ar: editingProduct.name_ar || editingProduct.name_fr || "",
+      slug: slugify(editingProduct.name_fr || editingProduct.name_ar || ""),
       price_mad: Number(editingProduct.price_mad) || 0,
       image: editingProduct.image || "",
       availability: editingProduct.availability ? 1 : 0

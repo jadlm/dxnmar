@@ -105,12 +105,32 @@ router.post("/products", authMiddleware, async (req, res) => {
 });
 
 router.put("/products/:id", authMiddleware, async (req, res) => {
-  const { name_fr, name_ar, slug, price_mad, category, image, description_fr, description_ar, availability, status } =
-    req.body || {};
-  if (!name_fr || !name_ar || !slug || !price_mad || !category) {
-    return res.status(400).json({ error: "Missing required fields." });
-  }
   try {
+    const [existingRows] = await pool.query(
+      "SELECT id, name_fr, name_ar, slug, price_mad, category, image, description_fr, description_ar, availability, status FROM products WHERE id = ?",
+      [req.params.id]
+    );
+    if (!existingRows.length) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+    const existing = existingRows[0];
+    const {
+      name_fr = existing.name_fr,
+      name_ar = existing.name_ar,
+      slug = existing.slug,
+      price_mad = existing.price_mad,
+      category = existing.category,
+      image = existing.image,
+      description_fr = existing.description_fr,
+      description_ar = existing.description_ar,
+      availability = existing.availability,
+      status = existing.status
+    } = req.body || {};
+
+    if (!name_fr || !name_ar || !slug || !price_mad || !category) {
+      return res.status(400).json({ error: "Missing required fields." });
+    }
+
     await pool.query(
       "UPDATE products SET name_fr = ?, name_ar = ?, slug = ?, price_mad = ?, category = ?, image = ?, description_fr = ?, description_ar = ?, availability = ?, status = ? WHERE id = ?",
       [
