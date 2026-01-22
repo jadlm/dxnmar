@@ -29,8 +29,9 @@ export const buildWhatsAppMessage = ({ items, locale, customer }) => {
 };
 
 export const buildWhatsAppLink = (phone, message) => {
+  const cleaned = String(phone || "").replace(/[^\d]/g, "");
   const encoded = encodeURIComponent(message);
-  return `https://wa.me/${phone}?text=${encoded}`;
+  return `https://wa.me/${cleaned}?text=${encoded}`;
 };
 
 export const buildTestimonialMessage = ({ locale, name, city, message }) => {

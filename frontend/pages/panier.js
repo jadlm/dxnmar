@@ -3,7 +3,8 @@ import { useLanguage } from "../components/LanguageProvider";
 import { buildWhatsAppLink, buildWhatsAppMessage } from "../utils/whatsapp";
 import { getCart, removeFromCart, updateQuantity } from "../utils/cart";
 
-const WHATSAPP_NUMBER = "212600000000";
+const WHATSAPP_NUMBER =
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212600000000";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 const CartPage = () => {
@@ -36,7 +37,13 @@ const CartPage = () => {
     if (cart.length === 0) return;
     setSending(true);
     setError("");
+    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER === "212600000000") {
+      setSending(false);
+      setError("Numéro WhatsApp manquant. Ajoute NEXT_PUBLIC_WHATSAPP_NUMBER.");
+      return;
+    }
     try {
+      window.open(waLink, "_blank", "noopener,noreferrer");
       await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +61,6 @@ const CartPage = () => {
       setError("Impossible d'enregistrer la commande.");
     } finally {
       setSending(false);
-      window.open(waLink, "_blank", "noopener,noreferrer");
     }
   };
 
