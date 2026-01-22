@@ -3,8 +3,9 @@ import { useState } from "react";
 import { addToCart } from "../../utils/cart";
 import { useLanguage } from "../../components/LanguageProvider";
 import { buildWhatsAppLink, buildWhatsAppMessage } from "../../utils/whatsapp";
+import { applyProductImages } from "../../utils/productImages";
 
-const WHATSAPP_NUMBER = "212600000000";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212600000000";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 const ProductDetail = ({ product }) => {
@@ -88,7 +89,7 @@ export async function getServerSideProps({ params }) {
   try {
     const res = await fetch(`${API_URL}/api/products`);
     const data = await res.json();
-    const list = Array.isArray(data) ? data : [];
+    const list = applyProductImages(Array.isArray(data) ? data : []);
     const product = list.find((p) => p.slug === params.slug) || null;
     return { props: { product } };
   } catch (err) {

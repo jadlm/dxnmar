@@ -43,7 +43,6 @@ const CartPage = () => {
       return;
     }
     try {
-      window.location.href = waLink;
       await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,8 +56,11 @@ const CartPage = () => {
           total_mad: total
         })
       });
+      });
+      window.location.href = waLink;
     } catch (err) {
       setError("Impossible d'enregistrer la commande.");
+      window.location.href = waLink;
     } finally {
       setSending(false);
     }

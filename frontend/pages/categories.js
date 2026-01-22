@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useLanguage } from "../components/LanguageProvider";
+import { applyProductImages } from "../utils/productImages";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -97,7 +98,8 @@ export async function getServerSideProps() {
   try {
     const res = await fetch(`${API_URL}/api/products`);
     const data = await res.json();
-    return { props: { products: Array.isArray(data) ? data : [] } };
+    const products = applyProductImages(Array.isArray(data) ? data : []);
+    return { props: { products } };
   } catch (err) {
     return { props: { products: [] } };
   }
