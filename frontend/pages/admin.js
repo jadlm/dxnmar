@@ -651,41 +651,41 @@ const AdminPage = () => {
             </option>
           ))}
         </select>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+        <div className="mt-4 overflow-x-auto rounded-lg border">
+          <table className="w-full min-w-[720px] table-fixed text-left text-sm">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-500 sticky top-0">
               <tr>
-                <th className="px-3 py-2">Produit</th>
-                <th className="px-3 py-2">Prix</th>
-                <th className="px-3 py-2">Statut</th>
-                <th className="px-3 py-2">Image</th>
-                <th className="px-3 py-2">Actions</th>
+                <th className="px-4 py-3 w-[40%]">Produit</th>
+                <th className="px-4 py-3 w-[12%]">Prix</th>
+                <th className="px-4 py-3 w-[20%]">Statut</th>
+                <th className="px-4 py-3 w-[12%]">Image</th>
+                <th className="px-4 py-3 w-[16%]">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="border-b">
-                  <td className="px-3 py-2">
+                <tr key={product.id} className="border-b even:bg-gray-50/60">
+                  <td className="px-4 py-3">
                     <p className="font-semibold">{product.name_fr}</p>
                     <p className="text-xs text-gray-400">{product.category}</p>
                   </td>
-                  <td className="px-3 py-2 text-gray-600">{product.price_mad} DH</td>
-                  <td className="px-3 py-2 text-xs text-gray-500">
+                  <td className="px-4 py-3 text-gray-600">{product.price_mad} DH</td>
+                  <td className="px-4 py-3 text-xs text-gray-500">
                     {product.status === "inactive" ? "Inactif" : "Actif"} •{" "}
                     {product.availability ? "Disponible" : "Indisponible"}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-4 py-3">
                     {product.image ? (
                       <img
                         src={product.image}
                         alt={product.name_fr}
-                        className="h-10 w-10 rounded object-cover"
+                        className="h-10 w-10 rounded object-cover border"
                       />
                     ) : (
                       <span className="text-xs text-gray-400">—</span>
                     )}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
                         type="button"
