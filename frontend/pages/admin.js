@@ -229,6 +229,30 @@ const AdminPage = () => {
     }
   };
 
+  const handleExport = async (format) => {
+    if (!token) {
+      setError("Session expirée. Reconnecte-toi.");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/api/admin/export/orders.${format}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("export");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `orders.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      setError("Impossible d'exporter les commandes.");
+    }
+  };
+
   const handleUpdateVolunteerStatus = async (id, status) => {
     try {
       await fetch(`${API_URL}/api/admin/volunteers/${id}`, {
@@ -874,18 +898,20 @@ const AdminPage = () => {
       <section id="orders" className="rounded-xl border bg-white p-5 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800">Commandes</h2>
         <div className="mt-3 flex flex-wrap gap-3 text-sm">
-          <a
-            href={`${API_URL}/api/admin/export/orders.csv`}
+          <button
+            type="button"
+            onClick={() => handleExport("csv")}
             className="rounded-full border px-4 py-2"
           >
             Export Excel (CSV)
-          </a>
-          <a
-            href={`${API_URL}/api/admin/export/orders.pdf`}
+          </button>
+          <button
+            type="button"
+            onClick={() => handleExport("pdf")}
             className="rounded-full border px-4 py-2"
           >
             Export PDF
-          </a>
+          </button>
         </div>
         <div className="mt-4 space-y-2 text-sm">
           {orders.map((item) => (
