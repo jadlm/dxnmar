@@ -43,7 +43,7 @@ const CartPage = () => {
       return;
     }
     try {
-      window.open(waLink, "_blank", "noopener,noreferrer");
+      window.location.href = waLink;
       await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
