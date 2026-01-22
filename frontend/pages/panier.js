@@ -56,7 +56,6 @@ const CartPage = () => {
           total_mad: total
         })
       });
-      });
       window.location.href = waLink;
     } catch (err) {
       setError("Impossible d'enregistrer la commande.");
