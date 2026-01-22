@@ -35,9 +35,10 @@ export const buildWhatsAppLink = (phone, message) => {
     const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
       navigator.userAgent || ""
     );
-    if (!isMobile) {
-      return `https://web.whatsapp.com/send?phone=${cleaned}&text=${encoded}`;
+    if (isMobile) {
+      return `whatsapp://send?phone=${cleaned}&text=${encoded}`;
     }
+    return `https://web.whatsapp.com/send?phone=${cleaned}&text=${encoded}`;
   }
   return `https://wa.me/${cleaned}?text=${encoded}`;
 };
