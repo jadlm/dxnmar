@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 const IMAGE_EXTENSIONS = new Set([
   ".jpg",
   ".jpeg",
@@ -9,6 +6,8 @@ const IMAGE_EXTENSIONS = new Set([
   ".avif",
   ".gif"
 ]);
+
+const isServer = () => typeof window === "undefined";
 
 const normalize = (value) =>
   String(value || "")
@@ -19,6 +18,9 @@ const normalize = (value) =>
     .trim();
 
 const buildImageMap = () => {
+  if (!isServer()) return new Map();
+  const fs = require("fs");
+  const path = require("path");
   const imagesDir = path.join(process.cwd(), "public", "images");
   if (!fs.existsSync(imagesDir)) return new Map();
   const files = fs.readdirSync(imagesDir);
