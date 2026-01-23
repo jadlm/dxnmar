@@ -3,7 +3,7 @@
     "home": "Accueil",
     "categories": "Catégories",
     "cart": "Panier",
-    "volunteer": "Volontariat",
+    "volunteer": "Devenir un membre",
     "testimonials": "Témoignages",
     "about": "À propos",
     "contact": "Contact"
@@ -45,11 +45,11 @@
     "send": "Envoyer via WhatsApp"
   },
   "volunteer": {
-    "title": "Devenez volontaire DXN",
+    "title": "Devenez membre DXN",
     "subtitle": "Rejoignez une communauté engagée pour la santé naturelle.",
-    "cta": "Devenir volontaire",
-    "pageTitle": "Programme volontaire DXN",
-    "pageIntro": "Le programme volontaire DXN permet à toute personne motivée de participer à la sensibilisation à la santé naturelle, au soutien communautaire et au partage des valeurs DXN.",
+    "cta": "Devenir un membre",
+    "pageTitle": "Programme d'adhésion DXN",
+    "pageIntro": "Le programme d'adhésion DXN permet à toute personne motivée de participer à la sensibilisation à la santé naturelle, au soutien communautaire et au partage des valeurs DXN.",
     "form": {
       "name": "Nom",
       "city": "Ville",

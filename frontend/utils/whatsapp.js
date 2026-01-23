@@ -63,7 +63,7 @@ export const buildTestimonialMessage = ({ locale, name, city, message }) => {
 
 export const buildVolunteerMessage = ({ locale, name, city, phone, motivation }) => {
   const isAr = locale === "ar";
-  const intro = isAr ? "السلام عليكم، أود الانضمام كمتطوع:" : "Bonjour, je souhaite devenir volontaire :";
+  const intro = isAr ? "السلام عليكم، أود الانضمام كعضو:" : "Bonjour, je souhaite devenir un membre :";
   const nameLabel = isAr ? "الاسم" : "Nom";
   const cityLabel = isAr ? "المدينة" : "Ville";
   const phoneLabel = isAr ? "الهاتف" : "Téléphone";

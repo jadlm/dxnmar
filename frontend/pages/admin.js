@@ -262,7 +262,7 @@ const AdminPage = () => {
       });
       fetchAll();
     } catch (err) {
-      setError("Impossible de modifier le volontaire.");
+      setError("Impossible de modifier le membre.");
     }
   };
 
@@ -275,7 +275,7 @@ const AdminPage = () => {
       });
       fetchAll();
     } catch (err) {
-      setError("Impossible d'assigner le volontaire.");
+      setError("Impossible d'assigner le membre.");
     }
   };
 
@@ -354,7 +354,7 @@ const AdminPage = () => {
       });
       fetchAll();
     } catch (err) {
-      setError("Impossible de supprimer le volontaire.");
+      setError("Impossible de supprimer le membre.");
     }
   };
 
@@ -956,7 +956,7 @@ const AdminPage = () => {
                     if (volunteerId) handleAssignVolunteer(volunteerId, item.id);
                   }}
                 >
-                  <option value="">Assigner volontaire</option>
+                  <option value="">Assigner membre</option>
                   {volunteers.map((v) => (
                     <option key={v.id} value={v.id}>
                       {v.name}
