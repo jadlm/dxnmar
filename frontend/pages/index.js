@@ -192,46 +192,59 @@ const HomePage = ({ products = [] }) => {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-10">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div>
+        <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-semibold text-gray-800">Les avantages des produits DXN</h2>
-            <div className="mt-4 space-y-3 text-sm text-gray-600">
-              <p className="font-semibold text-gray-800">Ingrédients naturels et contrôlés</p>
-              <p>
-                Les produits DXN sont formulés à base de plantes sélectionnées avec soin,
-                notamment le Ganoderma, reconnu pour ses bienfaits.
-              </p>
-              <p className="font-semibold text-gray-800">Qualité pharmaceutique</p>
-              <p>
-                Fabrication dans des laboratoires certifiés, avec des normes internationales strictes
-                de qualité et de sécurité.
-              </p>
-              <p className="font-semibold text-gray-800">Sans additifs nocifs</p>
-              <p>
-                Sans colorants artificiels, sans conservateurs chimiques et sans ingrédients controversés.
-              </p>
-              <p className="font-semibold text-gray-800">Bien-être global</p>
-              <p>
-                Les produits DXN agissent sur l’équilibre général du corps : énergie, digestion, immunité
-                et vitalité.
-              </p>
-              <p className="font-semibold text-gray-800">Recherche et expertise internationale</p>
-              <p>DXN s’appuie sur des années de recherche scientifique et une présence mondiale.</p>
-              <p className="font-semibold text-gray-800">Convient à toute la famille</p>
-              <p>Une large gamme adaptée aux besoins quotidiens des adultes et des seniors.</p>
-              <p className="font-semibold text-gray-800">Marque reconnue à l’international</p>
-              <p>
-                DXN est présente dans de nombreux pays avec une forte réputation dans le domaine du bien-être
-                naturel.
-              </p>
-            </div>
+            <p className="text-sm text-gray-600">
+              Des produits naturels pensés pour votre bien-être au quotidien.
+            </p>
           </div>
-          <div className="overflow-hidden rounded-2xl bg-gray-100">
-            <img
-              src="/images/id%C3%A9e.jpg"
-              alt="Avantages DXN"
-              className="h-full w-full object-cover"
-            />
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "Ingrédients naturels et contrôlés",
+                text:
+                  "Formulés à base de plantes sélectionnées avec soin, notamment le Ganoderma."
+              },
+              {
+                title: "Qualité pharmaceutique",
+                text:
+                  "Fabrication certifiée avec des normes internationales strictes de qualité."
+              },
+              {
+                title: "Sans additifs nocifs",
+                text:
+                  "Sans colorants artificiels, sans conservateurs chimiques ni ingrédients controversés."
+              },
+              {
+                title: "Bien-être global",
+                text:
+                  "Agit sur l’équilibre du corps : énergie, digestion, immunité et vitalité."
+              },
+              {
+                title: "Recherche internationale",
+                text:
+                  "DXN s’appuie sur des années de recherche scientifique et une présence mondiale."
+              },
+              {
+                title: "Pour toute la famille",
+                text:
+                  "Une large gamme adaptée aux besoins quotidiens des adultes et des seniors."
+              },
+              {
+                title: "Marque reconnue",
+                text:
+                  "Présente dans de nombreux pays avec une forte réputation dans le bien-être naturel."
+              }
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="group rounded-2xl border bg-gray-50 p-4 transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-gray-800">{item.title}</p>
+                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
