@@ -296,13 +296,16 @@ const AdminPage = () => {
       });
       if (!res.ok) throw new Error("upload");
       const data = await res.json();
-      // Le backend retourne maintenant /images/NOM_FICHIER.ext
-      // On utilise directement ce chemin (normalizeImageUrl le gérera)
+      // Le backend retourne /uploads/FILENAME (servi depuis le backend)
+      // normalizeImageUrl ajoutera automatiquement API_URL pour /uploads/
       onSuccess(data.url);
-      setSuccess(`Image uploadée avec succès: ${data.filename || data.url}`);
-      setTimeout(() => setSuccess(""), 3000);
+      const successMsg = data.note 
+        ? `✅ Image uploadée: ${data.filename || data.url}. ${data.note}`
+        : `✅ Image uploadée avec succès: ${data.filename || data.url}`;
+      setSuccess(successMsg);
+      setTimeout(() => setSuccess(""), 5000);
     } catch (err) {
-      setError("Impossible d'importer l'image. Vérifie que le backend a accès au dossier frontend/public/images/");
+      setError("❌ Impossible d'importer l'image. Vérifie les logs du backend Railway.");
     }
   };
 

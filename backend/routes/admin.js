@@ -63,35 +63,61 @@ router.post("/upload", authMiddleware, upload.single("image"), (req, res) => {
     return res.status(400).json({ error: "No file uploaded." });
   }
   
+  // Préparer le nom de fichier (garder le nom original mais nettoyé)
+  const ext = path.extname(req.file.originalname);
+  const base = path.basename(req.file.originalname, ext)
+    .replace(/[^a-zA-Z0-9\s_-]+/g, "") // Garder les espaces pour correspondre aux noms de fichiers
+    .trim();
+  const cleanFilename = `${base}${ext}`;
+  
+  // Essayer de copier vers frontend/public/images (pour développement local)
+  let copiedToPublic = false;
   try {
-    // Préparer le nom de fichier pour public/images (garder le nom original mais nettoyé)
-    const ext = path.extname(req.file.originalname);
-    const base = path.basename(req.file.originalname, ext)
-      .replace(/[^a-zA-Z0-9\s_-]+/g, "") // Garder les espaces pour correspondre aux noms de fichiers
-      .trim();
-    const publicFilename = `${base}${ext}`;
-    
-    // Chemin vers frontend/public/images
     const publicImagesDir = path.join(__dirname, "../../frontend/public/images");
-    const publicImagePath = path.join(publicImagesDir, publicFilename);
+    const publicImagePath = path.join(publicImagesDir, cleanFilename);
     
-    // Créer le dossier s'il n'existe pas
-    if (!fs.existsSync(publicImagesDir)) {
-      fs.mkdirSync(publicImagesDir, { recursive: true });
+    if (fs.existsSync(path.join(__dirname, "../../frontend"))) {
+      // Créer le dossier s'il n'existe pas
+      if (!fs.existsSync(publicImagesDir)) {
+        fs.mkdirSync(publicImagesDir, { recursive: true });
+      }
+      
+      // Copier le fichier vers public/images
+      fs.copyFileSync(req.file.path, publicImagePath);
+      copiedToPublic = true;
+      console.log(`✅ Image copiée vers: ${publicImagePath}`);
     }
-    
-    // Copier le fichier vers public/images
-    fs.copyFileSync(req.file.path, publicImagePath);
-    
-    // Retourner le chemin relatif pour Next.js
-    const url = `/images/${publicFilename}`;
-    return res.json({ url, filename: publicFilename });
   } catch (error) {
-    console.error("Upload error:", error);
-    // En cas d'erreur, retourner quand même le chemin uploads (fallback)
-    const url = `/uploads/${req.file.filename}`;
-    return res.json({ url, error: "Copied to uploads only. Please manually add to /images/ folder." });
+    console.warn("⚠️ Impossible de copier vers frontend/public/images:", error.message);
+    console.warn("   Le backend n'a probablement pas accès au dossier frontend (normal sur Railway)");
   }
+  
+  // Toujours retourner le chemin /uploads/ pour servir depuis le backend
+  // normalizeImageUrl dans le frontend ajoutera automatiquement API_URL
+  const url = `/uploads/${req.file.filename}`;
+  
+  return res.json({ 
+    url, 
+    filename: cleanFilename,
+    uploaded: true,
+    note: copiedToPublic 
+      ? "Image disponible dans /images/ (local) et /uploads/ (backend)" 
+      : "Image disponible via /uploads/ (backend). Pour production, utilisez Cloudinary ou copiez manuellement vers frontend/public/images/"
+  });
+});
+
+// Endpoint de diagnostic pour vérifier l'accès aux dossiers
+router.get("/upload-check", authMiddleware, (req, res) => {
+  const checks = {
+    uploadsDir: fs.existsSync("uploads"),
+    frontendDir: fs.existsSync(path.join(__dirname, "../../frontend")),
+    publicImagesDir: fs.existsSync(path.join(__dirname, "../../frontend/public/images")),
+    currentDir: __dirname,
+    uploadsPath: path.resolve("uploads"),
+    frontendPath: path.resolve(path.join(__dirname, "../../frontend")),
+    publicImagesPath: path.resolve(path.join(__dirname, "../../frontend/public/images"))
+  };
+  res.json(checks);
 });
 
 router.get("/products", authMiddleware, async (req, res) => {
