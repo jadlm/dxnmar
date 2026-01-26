@@ -28,12 +28,13 @@ const AdminPage = () => {
   const [stats, setStats] = useState(null);
   const [notifications, setNotifications] = useState({ new_orders: [], new_volunteers: [] });
   const [assignments, setAssignments] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [newProduct, setNewProduct] = useState({
     name_fr: "",
     name_ar: "",
     price_mad: "",
-    category: "Catalogue DXN",
+    category: "",
     image: "",
     description_fr: "",
     description_ar: "",
@@ -88,7 +89,8 @@ const AdminPage = () => {
         fetchJson(`${API_URL}/api/admin/clients`),
         fetchJson(`${API_URL}/api/admin/stats`),
         fetchJson(`${API_URL}/api/admin/notifications`),
-        fetchJson(`${API_URL}/api/admin/assignments`)
+        fetchJson(`${API_URL}/api/admin/assignments`),
+        fetchJson(`${API_URL}/api/admin/categories`)
       ]);
 
       const getValue = (idx, fallback) =>
@@ -102,6 +104,7 @@ const AdminPage = () => {
       const s = getValue(5, null);
       const n = getValue(6, { new_orders: [], new_volunteers: [] });
       const a = getValue(7, []);
+      const cats = getValue(8, []);
 
       setProducts(Array.isArray(p) ? p : []);
       setTestimonials(Array.isArray(t) ? t : []);
@@ -118,6 +121,7 @@ const AdminPage = () => {
           : { new_orders: [], new_volunteers: [] }
       );
       setAssignments(Array.isArray(a) ? a : []);
+      setCategories(Array.isArray(cats) ? cats : []);
 
       if (results[0].status !== "fulfilled") {
         throw results[0].reason;
@@ -598,12 +602,19 @@ const AdminPage = () => {
             value={newProduct.price_mad}
             onChange={(e) => setNewProduct({ ...newProduct, price_mad: e.target.value })}
           />
-          <input
+          <select
             className="w-full rounded-lg border px-3 py-2"
-            placeholder="Catégorie"
             value={newProduct.category}
             onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-          />
+            required
+          >
+            <option value="">Sélectionner une catégorie</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name_fr}>
+                {cat.name_fr}
+              </option>
+            ))}
+          </select>
           <select
             className="w-full rounded-lg border px-3 py-2"
             value={newProduct.status}
@@ -867,12 +878,19 @@ const AdminPage = () => {
               value={editingProduct.price_mad}
               onChange={(e) => setEditingProduct({ ...editingProduct, price_mad: e.target.value })}
             />
-            <input
+            <select
               className="w-full rounded-lg border px-3 py-2"
-              placeholder="Catégorie"
-              value={editingProduct.category}
+              value={editingProduct.category || ""}
               onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
-            />
+              required
+            >
+              <option value="">Sélectionner une catégorie</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name_fr}>
+                  {cat.name_fr}
+                </option>
+              ))}
+            </select>
             <select
               className="w-full rounded-lg border px-3 py-2"
               value={editingProduct.status || "active"}

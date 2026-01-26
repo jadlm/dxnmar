@@ -120,6 +120,17 @@ router.get("/upload-check", authMiddleware, (req, res) => {
   res.json(checks);
 });
 
+router.get("/categories", authMiddleware, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, name_fr, name_ar, slug FROM categories ORDER BY name_fr ASC"
+    );
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: "Unable to fetch categories." });
+  }
+});
+
 router.get("/products", authMiddleware, async (req, res) => {
   try {
     const [rows] = await pool.query(
