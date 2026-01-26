@@ -695,15 +695,24 @@ const AdminPage = () => {
                       alt={product.name_fr}
                       className="h-12 w-12 rounded object-cover border"
                       onError={(e) => {
+                        const imgSrc = e.target.src;
+                        console.error("Image failed to load (mobile):", {
+                          original: product.image,
+                          normalized: imgSrc,
+                          productId: product.id
+                        });
                         e.target.style.display = "none";
                         const parent = e.target.parentElement;
                         if (parent && !parent.querySelector(".image-error")) {
                           const errorDiv = document.createElement("div");
                           errorDiv.className = "image-error flex h-12 w-12 items-center justify-center rounded border bg-red-50 text-xs text-red-500";
                           errorDiv.textContent = "✗";
-                          errorDiv.title = `Image non trouvée: ${product.image}`;
+                          errorDiv.title = `Image non trouvée\nOriginal: ${product.image}\nNormalisé: ${imgSrc}`;
                           parent.appendChild(errorDiv);
                         }
+                      }}
+                      onLoad={() => {
+                        console.log("Image loaded successfully (mobile):", normalizeImageUrl(product.image));
                       }}
                     />
                   </div>
@@ -772,15 +781,29 @@ const AdminPage = () => {
                           alt={product.name_fr}
                           className="h-10 w-10 rounded object-cover border"
                           onError={(e) => {
+                            const imgSrc = e.target.src;
+                            console.error("Image failed to load:", {
+                              original: product.image,
+                              normalized: imgSrc,
+                              productId: product.id,
+                              productName: product.name_fr
+                            });
                             e.target.style.display = "none";
                             const parent = e.target.parentElement;
                             if (parent && !parent.querySelector(".image-error")) {
                               const errorDiv = document.createElement("div");
                               errorDiv.className = "image-error flex h-10 w-10 items-center justify-center rounded border bg-red-50 text-xs text-red-500";
                               errorDiv.textContent = "✗";
-                              errorDiv.title = `Image non trouvée: ${product.image}`;
+                              errorDiv.title = `Image non trouvée\nOriginal: ${product.image}\nNormalisé: ${imgSrc}`;
                               parent.appendChild(errorDiv);
                             }
+                          }}
+                          onLoad={() => {
+                            console.log("Image loaded successfully:", {
+                              original: product.image,
+                              normalized: normalizeImageUrl(product.image),
+                              productId: product.id
+                            });
                           }}
                         />
                       </div>

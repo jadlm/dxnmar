@@ -48,15 +48,10 @@ export const normalizeImageUrl = (url) => {
         decodedFilename = filename;
       }
       
-      // Si le nom de fichier décodé contient des caractères spéciaux, l'encoder
-      if (decodedFilename.includes(" ") || decodedFilename.includes("&") || decodedFilename.includes("#") || decodedFilename.includes("+")) {
-        // Encoder uniquement le nom de fichier, pas le chemin
-        const encodedFilename = encodeURIComponent(decodedFilename);
-        return `${path}/${encodedFilename}`;
-      }
-      
-      // Si pas de caractères spéciaux, retourner tel quel (même si déjà encodé)
-      return normalized;
+      // TOUJOURS encoder le nom de fichier pour éviter les problèmes avec les espaces et caractères spéciaux
+      // Next.js peut gérer les espaces, mais il vaut mieux encoder pour être sûr
+      const encodedFilename = encodeURIComponent(decodedFilename);
+      return `${path}/${encodedFilename}`;
     } catch (e) {
       // En cas d'erreur, retourner le chemin original
       return normalized;
