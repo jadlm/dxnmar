@@ -17,6 +17,7 @@ const AdminPage = () => {
   const [login, setLogin] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [products, setProducts] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
@@ -284,6 +285,7 @@ const AdminPage = () => {
   const handleUpload = async (file, onSuccess) => {
     if (!file) return;
     setError("");
+    setSuccess("");
     const formData = new FormData();
     formData.append("image", file);
     try {
@@ -294,9 +296,13 @@ const AdminPage = () => {
       });
       if (!res.ok) throw new Error("upload");
       const data = await res.json();
-      onSuccess(`${API_URL}${data.url}`);
+      // Le backend retourne maintenant /images/NOM_FICHIER.ext
+      // On utilise directement ce chemin (normalizeImageUrl le gérera)
+      onSuccess(data.url);
+      setSuccess(`Image uploadée avec succès: ${data.filename || data.url}`);
+      setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
-      setError("Impossible d'importer l'image.");
+      setError("Impossible d'importer l'image. Vérifie que le backend a accès au dossier frontend/public/images/");
     }
   };
 
@@ -496,6 +502,7 @@ const AdminPage = () => {
           </div>
 
           {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          {success && <p className="mb-4 text-sm text-green-600">{success}</p>}
           {loading && <p className="mb-4 text-sm text-gray-500">Chargement...</p>}
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -679,15 +686,24 @@ const AdminPage = () => {
             <div key={product.id} className="rounded-lg border bg-white p-3 shadow-sm">
               <div className="flex items-start gap-3">
                 {product.image ? (
-                  <img
-                    src={normalizeImageUrl(product.image)}
-                    alt={product.name_fr}
-                    className="h-12 w-12 rounded object-cover border"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.nextSibling.style.display = "flex";
-                    }}
-                  />
+                  <div className="relative">
+                    <img
+                      src={normalizeImageUrl(product.image)}
+                      alt={product.name_fr}
+                      className="h-12 w-12 rounded object-cover border"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        const parent = e.target.parentElement;
+                        if (parent && !parent.querySelector(".image-error")) {
+                          const errorDiv = document.createElement("div");
+                          errorDiv.className = "image-error flex h-12 w-12 items-center justify-center rounded border bg-red-50 text-xs text-red-500";
+                          errorDiv.textContent = "✗";
+                          errorDiv.title = `Image non trouvée: ${product.image}`;
+                          parent.appendChild(errorDiv);
+                        }
+                      }}
+                    />
+                  </div>
                 ) : (
                   <div className="flex h-12 w-12 items-center justify-center rounded border text-xs text-gray-400">
                     —
@@ -747,14 +763,24 @@ const AdminPage = () => {
                   </td>
                   <td className="px-4 py-3">
                     {product.image ? (
-                      <img
-                        src={normalizeImageUrl(product.image)}
-                        alt={product.name_fr}
-                        className="h-10 w-10 rounded object-cover border"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                        }}
-                      />
+                      <div className="relative">
+                        <img
+                          src={normalizeImageUrl(product.image)}
+                          alt={product.name_fr}
+                          className="h-10 w-10 rounded object-cover border"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            const parent = e.target.parentElement;
+                            if (parent && !parent.querySelector(".image-error")) {
+                              const errorDiv = document.createElement("div");
+                              errorDiv.className = "image-error flex h-10 w-10 items-center justify-center rounded border bg-red-50 text-xs text-red-500";
+                              errorDiv.textContent = "✗";
+                              errorDiv.title = `Image non trouvée: ${product.image}`;
+                              parent.appendChild(errorDiv);
+                            }
+                          }}
+                        />
+                      </div>
                     ) : (
                       <span className="text-xs text-gray-400">—</span>
                     )}

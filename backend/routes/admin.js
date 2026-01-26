@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const pool = require("../models/db");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const PDFDocument = require("pdfkit");
 
 const router = express.Router();
@@ -61,8 +62,36 @@ router.post("/upload", authMiddleware, upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded." });
   }
-  const url = `/uploads/${req.file.filename}`;
-  return res.json({ url });
+  
+  try {
+    // Préparer le nom de fichier pour public/images (garder le nom original mais nettoyé)
+    const ext = path.extname(req.file.originalname);
+    const base = path.basename(req.file.originalname, ext)
+      .replace(/[^a-zA-Z0-9\s_-]+/g, "") // Garder les espaces pour correspondre aux noms de fichiers
+      .trim();
+    const publicFilename = `${base}${ext}`;
+    
+    // Chemin vers frontend/public/images
+    const publicImagesDir = path.join(__dirname, "../../frontend/public/images");
+    const publicImagePath = path.join(publicImagesDir, publicFilename);
+    
+    // Créer le dossier s'il n'existe pas
+    if (!fs.existsSync(publicImagesDir)) {
+      fs.mkdirSync(publicImagesDir, { recursive: true });
+    }
+    
+    // Copier le fichier vers public/images
+    fs.copyFileSync(req.file.path, publicImagePath);
+    
+    // Retourner le chemin relatif pour Next.js
+    const url = `/images/${publicFilename}`;
+    return res.json({ url, filename: publicFilename });
+  } catch (error) {
+    console.error("Upload error:", error);
+    // En cas d'erreur, retourner quand même le chemin uploads (fallback)
+    const url = `/uploads/${req.file.filename}`;
+    return res.json({ url, error: "Copied to uploads only. Please manually add to /images/ folder." });
+  }
 });
 
 router.get("/products", authMiddleware, async (req, res) => {
