@@ -1,0 +1,1 @@
+(function(){var n=_ge("langChange");n&&(typeof Log!="undefined"&&Log.LogFilterFlare&&Log.LogFilterFlare(["langSwitchShown"]),typeof sj_be!="undefined"&&sj_be(n,"click",function(){typeof sj_log!="undefined"&&sj_log("CI.Info","LanguageSwitch","ButtonClicked");typeof Log!="undefined"&&Log.LogFilterFlare&&Log.LogFilterFlare(["langSwitchClicked"])},!1))})()

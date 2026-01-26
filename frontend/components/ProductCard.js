@@ -2,6 +2,7 @@ import Link from "next/link";
 import { addToCart } from "../utils/cart";
 import { useState } from "react";
 import { useLanguage } from "./LanguageProvider";
+import { normalizeImageUrl } from "../utils/imageUrl";
 
 const ProductCard = ({ product }) => {
   const { locale, t } = useLanguage();
@@ -22,9 +23,14 @@ const ProductCard = ({ product }) => {
     <div className="rounded-lg border bg-white p-4 shadow-sm">
       <div className="h-36 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
         <img
-          src={product.image || "/images/product-placeholder.svg"}
+          src={normalizeImageUrl(product.image) || "/images/product-placeholder.svg"}
           alt={name}
           className="h-full w-full object-contain"
+          onError={(e) => {
+            if (e.target.src !== "/images/product-placeholder.svg") {
+              e.target.src = "/images/product-placeholder.svg";
+            }
+          }}
         />
       </div>
       <h3 className="mt-3 text-sm font-semibold text-gray-800 line-clamp-2">{name}</h3>

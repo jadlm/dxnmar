@@ -4,6 +4,7 @@ import { addToCart } from "../../utils/cart";
 import { useLanguage } from "../../components/LanguageProvider";
 import { buildWhatsAppLink, buildWhatsAppMessage } from "../../utils/whatsapp";
 import { applyProductImages } from "../../utils/productImages";
+import { normalizeImageUrl } from "../../utils/imageUrl";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212600000000";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
@@ -34,9 +35,14 @@ const ProductDetail = ({ product }) => {
       <div className="grid gap-6 md:grid-cols-2">
         <div className="h-56 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden">
           <img
-            src={product.image || "/images/product-placeholder.svg"}
+            src={normalizeImageUrl(product.image) || "/images/product-placeholder.svg"}
             alt={name}
             className="h-full w-full object-contain"
+            onError={(e) => {
+              if (e.target.src !== "/images/product-placeholder.svg") {
+                e.target.src = "/images/product-placeholder.svg";
+              }
+            }}
           />
         </div>
         <div>

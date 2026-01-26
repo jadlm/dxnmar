@@ -38,6 +38,11 @@ const buildImageMap = () => {
 export const applyProductImages = (products = []) => {
   const map = buildImageMap();
   return products.map((product) => {
+    // Si le produit a déjà une image dans la DB, la garder
+    if (product.image && product.image.trim()) {
+      return product;
+    }
+    // Sinon, chercher une image locale basée sur le nom
     const key = normalize(product.name_fr || product.name_ar || product.name);
     if (key && map.has(key)) {
       return { ...product, image: map.get(key) };
