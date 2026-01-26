@@ -10,6 +10,36 @@ const slugify = (value) =>
     .replace(/-+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const normalizeImageUrl = (url) => {
+  if (!url) return "";
+  // Convertir les backslashes Windows en slashes
+  let normalized = url.replace(/\\/g, "/");
+  // Si c'est déjà une URL absolue (http/https), la retourner telle quelle
+  if (normalized.startsWith("http://") || normalized.startsWith("https://")) {
+    return normalized;
+  }
+  // Si ça commence par /uploads/, c'est un fichier uploadé via le backend
+  if (normalized.startsWith("/uploads/")) {
+    return `${API_URL}${normalized}`;
+  }
+  // S'assurer que les chemins relatifs commencent par /
+  if (!normalized.startsWith("/")) {
+    normalized = `/${normalized}`;
+  }
+  // Si ça commence par /images/, c'est un fichier dans public/images
+  // Encoder les espaces et caractères spéciaux dans le nom de fichier
+  if (normalized.startsWith("/images/")) {
+    const parts = normalized.split("/");
+    const filename = parts[parts.length - 1];
+    const path = parts.slice(0, -1).join("/");
+    // Encoder uniquement le nom de fichier, pas le chemin
+    const encodedFilename = encodeURIComponent(filename);
+    return `${path}/${encodedFilename}`;
+  }
+  // Par défaut, traiter comme un chemin relatif
+  return normalized;
+};
+
 const AdminPage = () => {
   const [token, setToken] = useState("");
   const [login, setLogin] = useState({ username: "", password: "" });
@@ -678,9 +708,13 @@ const AdminPage = () => {
               <div className="flex items-start gap-3">
                 {product.image ? (
                   <img
-                    src={product.image}
+                    src={normalizeImageUrl(product.image)}
                     alt={product.name_fr}
                     className="h-12 w-12 rounded object-cover border"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
                 ) : (
                   <div className="flex h-12 w-12 items-center justify-center rounded border text-xs text-gray-400">
@@ -742,9 +776,12 @@ const AdminPage = () => {
                   <td className="px-4 py-3">
                     {product.image ? (
                       <img
-                        src={product.image}
+                        src={normalizeImageUrl(product.image)}
                         alt={product.name_fr}
                         className="h-10 w-10 rounded object-cover border"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
                       />
                     ) : (
                       <span className="text-xs text-gray-400">—</span>
