@@ -581,6 +581,38 @@ const AdminPage = () => {
           </div>
 
           <div className="space-y-8">
+      {categories.length === 0 && (
+        <section className="rounded-xl border bg-yellow-50 p-5 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">⚠️ Catégories manquantes</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Aucune catégorie trouvée. Clique sur le bouton ci-dessous pour créer les catégories automatiquement.
+          </p>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                setError("");
+                setSuccess("");
+                const res = await fetch(`${API_URL}/api/admin/categories/seed`, {
+                  method: "POST",
+                  headers: authHeaders
+                });
+                if (!res.ok) throw new Error("seed");
+                const data = await res.json();
+                setSuccess(`✅ ${data.message || "Catégories créées avec succès !"}`);
+                setTimeout(() => {
+                  fetchAll();
+                }, 1000);
+              } catch (err) {
+                setError("❌ Impossible de créer les catégories. Vérifie les logs du backend.");
+              }
+            }}
+            className="rounded-lg bg-dxnGreen px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
+          >
+            🚀 Créer les catégories automatiquement
+          </button>
+        </section>
+      )}
       <section id="products" className="rounded-xl border bg-white p-5 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800">Ajouter un produit</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

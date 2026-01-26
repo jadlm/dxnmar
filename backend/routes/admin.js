@@ -131,6 +131,54 @@ router.get("/categories", authMiddleware, async (req, res) => {
   }
 });
 
+router.post("/categories/seed", authMiddleware, async (req, res) => {
+  try {
+    // Créer la table si elle n'existe pas
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name_fr VARCHAR(255) NOT NULL,
+        name_ar VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) NOT NULL UNIQUE
+      )
+    `);
+
+    const categories = [
+      { name_fr: "FOOD SUPPLEMENTS", name_ar: "مكملات غذائية", slug: "food-supplements" },
+      { name_fr: "COSMETICS & SKIN CARE", name_ar: "مستحضرات التجميل والعناية بالبشرة", slug: "cosmetics-skin-care" },
+      { name_fr: "PERSONAL CARE", name_ar: "العناية الشخصية", slug: "personal-care" },
+      { name_fr: "FOOD & BEVERAGE", name_ar: "طعام ومشروبات", slug: "food-beverage" },
+      { name_fr: "DXN OOTEA SERIE", name_ar: "سلسلة DXN OOTEA", slug: "dxn-ootea-serie" },
+      { name_fr: "APPAREL & CLOTHING", name_ar: "ملابس وأزياء", slug: "apparel-clothing" },
+      { name_fr: "DXN KALLOW COSMETICS", name_ar: "مستحضرات DXN KALLOW", slug: "dxn-kallow-cosmetics" }
+    ];
+
+    let inserted = 0;
+    let updated = 0;
+
+    for (const cat of categories) {
+      const [result] = await pool.query(
+        "INSERT INTO categories (name_fr, name_ar, slug) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE name_fr = VALUES(name_fr), name_ar = VALUES(name_ar)",
+        [cat.name_fr, cat.name_ar, cat.slug]
+      );
+      if (result.affectedRows === 1) {
+        inserted++;
+      } else {
+        updated++;
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Categories seeded successfully. ${inserted} inserted, ${updated} updated.`,
+      total: categories.length
+    });
+  } catch (error) {
+    console.error("Error seeding categories:", error);
+    res.status(500).json({ error: "Unable to seed categories.", details: error.message });
+  }
+});
+
 router.get("/products", authMiddleware, async (req, res) => {
   try {
     const [rows] = await pool.query(
