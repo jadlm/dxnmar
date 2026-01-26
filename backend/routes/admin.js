@@ -393,22 +393,35 @@ router.get("/export/orders.pdf", authMiddleware, async (req, res) => {
 
 router.get("/stats", authMiddleware, async (req, res) => {
   try {
-    const [[orders]] = await pool.query("SELECT COUNT(*) as total_orders, COALESCE(SUM(total_mad),0) as total_sales FROM orders");
+    // Calculer le total des ventes en excluant les commandes annulées
+    // et en s'assurant que total_mad n'est pas NULL ou 0
+    const [[orders]] = await pool.query(
+      "SELECT COUNT(*) as total_orders, COALESCE(SUM(CASE WHEN status != 'cancelled' AND total_mad > 0 THEN total_mad ELSE 0 END), 0) as total_sales FROM orders"
+    );
     const [[clients]] = await pool.query("SELECT COUNT(*) as total_clients FROM clients");
     const [[volunteers]] = await pool.query("SELECT COUNT(*) as total_volunteers FROM volunteers");
     const [[products]] = await pool.query("SELECT COUNT(*) as total_products FROM products");
     const [platforms] = await pool.query(
-      "SELECT platform, COUNT(*) as count FROM orders GROUP BY platform"
+      "SELECT platform, COUNT(*) as count FROM orders WHERE status != 'cancelled' GROUP BY platform"
     );
+    
+    // Debug: vérifier les commandes pour diagnostiquer
+    const [allOrders] = await pool.query(
+      "SELECT id, total_mad, status, created_at FROM orders ORDER BY created_at DESC LIMIT 10"
+    );
+    console.log("📊 Stats Debug - Last 10 orders:", allOrders);
+    console.log("📊 Stats - Total sales calculated:", orders.total_sales);
+    
     res.json({
       total_orders: orders.total_orders,
-      total_sales: orders.total_sales,
+      total_sales: Number(orders.total_sales) || 0, // S'assurer que c'est un nombre
       total_clients: clients.total_clients,
       total_volunteers: volunteers.total_volunteers,
       total_products: products.total_products,
       orders_by_platform: platforms
     });
   } catch (error) {
+    console.error("Error fetching stats:", error);
     res.status(500).json({ error: "Unable to fetch stats." });
   }
 });
