@@ -25,9 +25,18 @@ export const normalizeImageUrl = (url) => {
     return `${API_URL}${normalized}`;
   }
   
-  // Si ça commence par "images/" (sans slash), ajouter le slash
-  if (normalized.startsWith("images/") && !normalized.startsWith("/images/")) {
-    normalized = `/${normalized}`;
+  // Si ça commence par "images/" (sans slash au début), ajouter le slash
+  // Gérer aussi les cas où il y a un slash au début mais pas après "images"
+  if (normalized.includes("images/")) {
+    // Extraire la partie après "images/"
+    const imagesIndex = normalized.indexOf("images/");
+    if (imagesIndex === 0 || normalized[imagesIndex - 1] === "/" || normalized[imagesIndex - 1] === "\\") {
+      // Si "images/" est au début ou après un slash, s'assurer qu'il y a un slash avant
+      normalized = normalized.substring(imagesIndex);
+      if (!normalized.startsWith("/")) {
+        normalized = `/${normalized}`;
+      }
+    }
   }
   
   // S'assurer que les chemins relatifs commencent par /
