@@ -13,6 +13,7 @@ const ProductDetail = ({ product }) => {
   const { locale, t } = useLanguage();
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
   if (router.isFallback || !product) {
     return <div className="mx-auto max-w-3xl px-4 py-10">Chargement...</div>;
@@ -71,10 +72,21 @@ const ProductDetail = ({ product }) => {
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              onClick={() => addToCart({ slug: product.slug, name, price: product.price_mad })}
-              className="rounded-full bg-dxnGreen px-6 py-3 text-sm font-semibold text-white"
+              onClick={() => {
+                addToCart({ slug: product.slug, name, price: product.price_mad });
+                setAdded(true);
+                setTimeout(() => setAdded(false), 2000);
+              }}
+              className="rounded-full bg-dxnGreen px-6 py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all"
             >
-              {t("product.add")}
+              {added ? (
+                <>
+                  <span>✓</span>
+                  <span>{locale === "ar" ? "تمت الإضافة" : "Ajouté !"}</span>
+                </>
+              ) : (
+                t("product.add")
+              )}
             </button>
             <a
               href={waLink}

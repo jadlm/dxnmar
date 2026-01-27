@@ -20,6 +20,7 @@ const CartPage = () => {
   });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     setCart(getCart());
@@ -37,6 +38,7 @@ const CartPage = () => {
     if (cart.length === 0) return;
     setSending(true);
     setError("");
+    setSuccess(false);
     if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER === "212600000000") {
       setSending(false);
       setError("Numéro WhatsApp manquant. Ajoute NEXT_PUBLIC_WHATSAPP_NUMBER.");
@@ -56,12 +58,19 @@ const CartPage = () => {
           total_mad: total
         })
       });
-      window.location.href = waLink;
+      setSuccess(true);
+      setSending(false);
+      // Attendre 2 secondes pour afficher le message de succès avant de rediriger
+      setTimeout(() => {
+        window.location.href = waLink;
+      }, 2000);
     } catch (err) {
       setError("Impossible d'enregistrer la commande.");
-      window.location.href = waLink;
-    } finally {
+      setSuccess(true); // Afficher le succès même en cas d'erreur d'enregistrement
       setSending(false);
+      setTimeout(() => {
+        window.location.href = waLink;
+      }, 2000);
     }
   };
 
@@ -152,12 +161,24 @@ const CartPage = () => {
               />
             </div>
             {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
+            {success && (
+              <div className="mt-4 rounded-lg bg-green-50 border border-green-200 p-4">
+                <p className="text-sm font-semibold text-green-800 flex items-center gap-2">
+                  <span className="text-lg">✅</span>
+                  {locale === "ar" ? "تم إرسال الطلب بنجاح!" : "Commande envoyée avec succès !"}
+                </p>
+                <p className="text-xs text-green-600 mt-1">
+                  {locale === "ar" ? "جاري التوجيه إلى WhatsApp..." : "Redirection vers WhatsApp..."}
+                </p>
+              </div>
+            )}
             <button
               type="button"
               onClick={handleSend}
-              className="mt-5 inline-flex w-full justify-center rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white"
+              disabled={sending || success}
+              className="mt-5 inline-flex w-full justify-center rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {sending ? "..." : t("cart.send")}
+              {sending ? "..." : success ? "✅" : t("cart.send")}
             </button>
           </div>
         </div>
