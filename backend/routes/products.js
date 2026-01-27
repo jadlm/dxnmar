@@ -14,4 +14,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/categories", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, name_fr, name_ar, slug FROM categories ORDER BY name_fr ASC"
+    );
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: "Unable to fetch categories." });
+  }
+});
+
 module.exports = router;

@@ -1,15 +1,38 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import { useLanguage } from "../components/LanguageProvider";
 import { applyProductImages } from "../utils/productImages";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-const CategoriesPage = ({ products = [] }) => {
-  const { t } = useLanguage();
+const CategoriesPage = ({ products = [], categoriesList = [] }) => {
+  const { t, locale } = useLanguage();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [sort, setSort] = useState("price_asc");
+
+  // Créer un mapping entre le nom français de la catégorie et ses traductions
+  const categoryMap = useMemo(() => {
+    const map = {};
+    categoriesList.forEach((cat) => {
+      map[cat.name_fr] = {
+        name_fr: cat.name_fr,
+        name_ar: cat.name_ar,
+        slug: cat.slug
+      };
+    });
+    return map;
+  }, [categoriesList]);
+
+  // Fonction pour obtenir le nom de la catégorie selon la langue
+  const getCategoryName = (categoryName) => {
+    if (!categoryName) return locale === "ar" ? "كتالوج DXN" : "Catalogue DXN";
+    const cat = categoryMap[categoryName];
+    if (cat) {
+      return locale === "ar" ? cat.name_ar : cat.name_fr;
+    }
+    return categoryName; // Fallback si la catégorie n'est pas dans la base
+  };
 
   const categories = useMemo(() => {
     return Array.from(
@@ -63,7 +86,7 @@ const CategoriesPage = ({ products = [] }) => {
           <option value="">{t("catalog.filter")}</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>
-              {cat}
+              {getCategoryName(cat)}
             </option>
           ))}
         </select>
@@ -80,7 +103,7 @@ const CategoriesPage = ({ products = [] }) => {
 
       {Object.entries(grouped).map(([cat, items]) => (
         <div key={cat} className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-800">{cat}</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{getCategoryName(cat)}</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
             {items.map((product) => (
               <ProductCard key={product.slug} product={product} />
@@ -96,11 +119,19 @@ export default CategoriesPage;
 
 export async function getServerSideProps() {
   try {
-    const res = await fetch(`${API_URL}/api/products`);
-    const data = await res.json();
-    const products = applyProductImages(Array.isArray(data) ? data : []);
-    return { props: { products } };
+    const [productsRes, categoriesRes] = await Promise.all([
+      fetch(`${API_URL}/api/products`),
+      fetch(`${API_URL}/api/products/categories`)
+    ]);
+    
+    const productsData = await productsRes.json();
+    const categoriesData = await categoriesRes.json();
+    
+    const products = applyProductImages(Array.isArray(productsData) ? productsData : []);
+    const categoriesList = Array.isArray(categoriesData) ? categoriesData : [];
+    
+    return { props: { products, categoriesList } };
   } catch (err) {
-    return { props: { products: [] } };
+    return { props: { products: [], categoriesList: [] } };
   }
 }
