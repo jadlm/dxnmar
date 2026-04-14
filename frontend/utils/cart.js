@@ -1,17 +1,15 @@
 const CART_KEY = "dxn_cart";
 
-/* ============================= */
-/* EVENT GLOBAL (update navbar) */
-/* ============================= */
-const notifyCartChange = () => {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event("cartUpdated"));
-  }
+const notifyCartUpdated = (items) => {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("dxn-cart-updated", {
+      detail: {
+        count: items.reduce((sum, item) => sum + (item.quantity || 0), 0)
+      }
+    })
+  );
 };
-
-/* ============================= */
-/* GET CART */
-/* ============================= */
 export const getCart = () => {
   if (typeof window === "undefined") return [];
   const raw = window.localStorage.getItem(CART_KEY);
@@ -24,6 +22,7 @@ export const getCart = () => {
 export const saveCart = (items) => {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(CART_KEY, JSON.stringify(items));
+  notifyCartUpdated(items);
 };
 
 /* ============================= */
@@ -40,7 +39,6 @@ export const addToCart = (item) => {
   }
 
   saveCart(cart);
-  notifyCartChange();
   return cart;
 };
 
@@ -50,7 +48,6 @@ export const addToCart = (item) => {
 export const removeFromCart = (slug) => {
   const cart = getCart().filter((c) => c.slug !== slug);
   saveCart(cart);
-  notifyCartChange();
   return cart;
 };
 
@@ -63,7 +60,6 @@ export const updateQuantity = (slug, quantity) => {
   );
 
   saveCart(cart);
-  notifyCartChange();
   return cart;
 };
 
@@ -72,5 +68,7 @@ export const updateQuantity = (slug, quantity) => {
 /* ============================= */
 export const clearCart = () => {
   saveCart([]);
-  notifyCartChange();
 };
+
+export const getCartCount = () =>
+  getCart().reduce((sum, item) => sum + (item.quantity || 0), 0);

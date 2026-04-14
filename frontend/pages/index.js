@@ -279,7 +279,7 @@ const HomePage = ({ products = [] }) => {
             {t("contact.subtitle")}
           </p>
           <a
-            href="/catalogue-dxn.pdf"
+            href="/Catalogue version Feb 26_compressed.pdf"
             target="_blank"
             rel="noreferrer"
             className="mt-4 inline-flex rounded-full border px-6 py-3 text-sm font-semibold text-gray-700"
