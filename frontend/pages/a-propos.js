@@ -1,3 +1,4 @@
+import AboutContent from "../components/AboutContent";
 import { useLanguage } from "../components/LanguageProvider";
 
 const AboutPage = () => {
@@ -14,7 +15,7 @@ const AboutPage = () => {
             className="h-full w-full object-cover"
           />
         </div>
-        <p className="text-gray-600">{t("about.content")}</p>
+        <AboutContent />
       </div>
     </div>
   );

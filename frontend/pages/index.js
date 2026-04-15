@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AboutContent from "../components/AboutContent";
 import ProductCard from "../components/ProductCard";
 import TestimonialCard from "../components/TestimonialCard";
 import { useLanguage } from "../components/LanguageProvider";
@@ -187,7 +188,7 @@ const HomePage = ({ products = [] }) => {
               className="h-full w-full object-cover"
             />
           </div>
-          <p className="text-gray-600 leading-relaxed">{t("about.content")}</p>
+          <AboutContent />
         </div>
       </section>
 
